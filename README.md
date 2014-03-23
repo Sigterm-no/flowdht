@@ -5,9 +5,9 @@ An open source, pure-[Go](http://www.golang.org "Pretty much the best programmin
 This is an fork of the Wendy, [https://github.com/secondbit/wendy](https://github.com/secondbit/wendy)
 
 ## Status
-[![Build Status](https://secure.travis-ci.org/secondbit/wendy.png)](http://travis-ci.org/secondbit/wendy)
+[![Build Status](https://api.travis-ci.org/Sigterm-no/flowdht.png)](https://api.travis-ci.org/Sigterm-no/flowdht)
 
-**Beta1**: Wendy is still in active development. It should not be used for mission-critical software. It has been beat on a little, but there are probably still bugs we haven't found or fixed.
+**Beta1**: FlowDHT is still in active development. It should not be used for mission-critical software. It has been beat on a little, but there are probably still bugs we haven't found or fixed.
 
 ## Requirements
 

@@ -1,4 +1,4 @@
-package wendy
+package flowdht
 
 import (
 	"strconv"
@@ -9,7 +9,7 @@ import (
 
 // Node represents a specific machine in the cluster.
 type Node struct {
-	LocalIP                string // The IP through which the Node should be accessed by other Nodes with an identical Region
+	LocalIP                string // The IP through which the Node should be accessed by other Nodes with an identical "Darknet"
 	GlobalIP               string // The IP through which the Node should be accessed by other Nodes whose Region differs
 	Port                   int    // The port the Node is listening on
 	Region                 string // A string that allows you to intelligently route between local and global requests for, e.g., EC2 regions

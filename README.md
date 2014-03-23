@@ -1,6 +1,8 @@
-# Wendy
+# FlowDHT
 
 An open source, pure-[Go](http://www.golang.org "Pretty much the best programming language ever") implementation of the [Pastry Distributed Hash Table](http://en.wikipedia.org/wiki/Pastry_(DHT\) "Pastry on Wikipedia").
+
+This is an fork of the Wendy, [https://github.com/secondbit/wendy](https://github.com/secondbit/wendy)
 
 ## Status
 [![Build Status](https://secure.travis-ci.org/secondbit/wendy.png)](http://travis-ci.org/secondbit/wendy)
@@ -9,13 +11,7 @@ An open source, pure-[Go](http://www.golang.org "Pretty much the best programmin
 
 ## Requirements
 
-This implementation of Wendy is written to be compatible with Go 1. It uses nothing outside of the Go standard library. Nodes in the network must be able to communicate using TCP over a configurable port. Nodes also must be able to have long-running processes.
-
-Wendy was developed on OS X 10.8.1, using Go 1.0.3. It has been verified to work as expected running under Ubuntu 12.04 LTS (64-bit), using Go 1.0.3.
-
-## Installation
-
-The typical `go get secondbit.org/wendy` will install Wendy.
+This implementation of FlowDHT/Wendy is written to be compatible with Go 1. It uses nothing outside of the Go standard library. Nodes in the network must be able to communicate using TCP over a configurable port. Nodes also must be able to have long-running processes.
 
 ## Documentation
 
@@ -25,9 +21,9 @@ We took pains to try and follow [the guidelines](http://golang.org/doc/articles/
 
 ### Initialising the Cluster
 
-The "Cluster" represents your network of nodes. The first thing you should do in any application that uses Wendy is initialise the cluster.
+The "Cluster" represents your network of nodes. The first thing you should do in any application that uses FlowDHT is initialise the cluster.
 
-First, you need to create the local Node&mdash;because Wendy is a peer-to-peer algorithm, there's no such thing as a server or client; instead, everything is a "Node", and only Nodes can connect to the Cluster.
+First, you need to create the local Node&mdash;because FlowDHT is a peer-to-peer algorithm, there's no such thing as a server or client; instead, everything is a "Node", and only Nodes can connect to the Cluster.
 
 ```go
 hostname, err := os.Hostname()
@@ -46,8 +42,8 @@ NewNode expects five parameters:
 1. The ID of the new Node. We created one in the code sample above. The ID can be any unique string&mdash;it is used to identify the Node to the network. The ID string has to be over 16 bytes long to be substantial enough to form an ID out of, or NodeIDFromBytes will return an error.
 2. Your local IP address. This IP address only needs to be accessible to your Region (a concept that will be explained below).
 3. Your global IP address. This IP address should be accessible to any Node in your network&mdash;the entire Internet should be able to reach the IP.
-4. Your Region. Your Region is a string that helps segment your Wendy network to keep bandwidth minimal. For cloud providers (e.g., EC2), network traffic within a region is free. To take advantage of this, we modified the Wendy algorithm to use the local IP address when two Nodes are in the same Region, and the global IP address the rest of the time, while heavily favouring Nodes that are in the same Region. This allows you to have Nodes in multiple Regions in the same Cluster while minimising your bandwidth costs.
-5. The port this Node should listen on, as an int. Should be an open port you have permission to listen on. If you use `0`, Wendy will automatically use a randomly chosen open port.
+4. Your Region. Your Region is a string that helps segment your FlowDHT network to keep bandwidth minimal. For cloud providers (e.g., EC2), network traffic within a region is free. To take advantage of this, we modified the FlowDHT algorithm to use the local IP address when two Nodes are in the same Region, and the global IP address the rest of the time, while heavily favouring Nodes that are in the same Region. This allows you to have Nodes in multiple Regions in the same Cluster while minimising your bandwidth costs.
+5. The port this Node should listen on, as an int. Should be an open port you have permission to listen on. If you use `0`, FlowDHT will automatically use a randomly chosen open port.
 
 Once you have a Node, you can join the Cluster.
 
@@ -57,7 +53,7 @@ cluster := wendy.NewCluster(node, credentials)
 
 NewCluster just creates a Cluster object, initialises the state tables and channels used to keep the algorithm concurrency-safe, and returns it. It requires that you specify the current Node and supply [Credentials](http://godoc.org/secondbit.org/wendy#Credentials) for the Cluster.
 
-Credentials are an interface that Wendy defines to help control access to your clusters. Credentials could be whatever you want them to be: public/private keys, a single word or phrase, a rather large number... anything at all is fair game. The only rules for Credentials are as follows:
+Credentials are an interface that FlowDHT defines to help control access to your clusters. Credentials could be whatever you want them to be: public/private keys, a single word or phrase, a rather large number... anything at all is fair game. The only rules for Credentials are as follows:
 
 1. Calling `Marshal()` on any implementation of Credentials must return a slice of bytes.
 2. Calling `Valid([]byte)` on any implementation of Credentials must decide whether the specified slice of bytes should grant access to the Cluster (return true) or not (return false). The recommended way to do that is to attempt to unmarshal the byte slice into your Credentials implementation (returning false on error) and then comparing the resulting instance with your local instance. But there's nothing stopping you from just returning true, granting anyone who cares to connect full access to your Cluster. Like [PSN](http://en.wikipedia.org/wiki/PlayStation_Network_outage) does (*Zing!*)
@@ -79,7 +75,7 @@ defer cluster.Stop()
 
 ### Registering Handlers For Your Application
 
-Wendy offers several callbacks at various points in the process of exchanging messages within your Cluster. You can use these callbacks to register listeners within your application. These callbacks are simply instances of a type that fulfills the [wendy.Application](http://godoc.org/secondbit.org/wendy#Application) interface and are subsequently registered to a cluster.
+FlowDHT offers several callbacks at various points in the process of exchanging messages within your Cluster. You can use these callbacks to register listeners within your application. These callbacks are simply instances of a type that fulfills the [wendy.Application](http://godoc.org/secondbit.org/wendy#Application) interface and are subsequently registered to a cluster.
 
 ```go
 type WendyApplication struct {
@@ -134,9 +130,9 @@ When `Join()` is called, the Node will contact the specified Node and announce i
 
 ### Sending Messages
 
-Sending a message in Wendy is a little weird. Each message has an ID associated with it, which you can generate based on the contents of the message or some other key. Wendy doesn't care what the relationship between the message and the ID is (Wendy is perfectly happy with random message IDs, in fact), but applications built on Wendy sometimes dictate the terms of the message ID. All Wendy requires is that your message ID, like your Node IDs, has at least 16 bytes worth of data in it.
+Sending a message in FlowDHT is a little weird. Each message has an ID associated with it, which you can generate based on the contents of the message or some other key. FlowDHT doesn't care what the relationship between the message and the ID is (FlowDHT is perfectly happy with random message IDs, in fact), but applications built on FlowDHT sometimes dictate the terms of the message ID. All FlowDHT requires is that your message ID, like your Node IDs, has at least 16 bytes worth of data in it.
 
-Messages in Wendy aren't sent *to* something, they're sent *towards* something--their message ID. When a Node receives a Message, it checks to see if it knows about any Node with a NodeID closer to the MessageID than its own NodeID. If it does, it forwards the Message on to that Node. If it doesn't it considers the Message to be delivered. There are all sorts of algorithms in place to help the Message reach that delivery quicker, but they're not really the important bit. The important bit is that messages aren't sent *to* Nodes, they're sent *towards* their MessageID.
+Messages in FlowDHT aren't sent *to* something, they're sent *towards* something--their message ID. When a Node receives a Message, it checks to see if it knows about any Node with a NodeID closer to the MessageID than its own NodeID. If it does, it forwards the Message on to that Node. If it doesn't it considers the Message to be delivered. There are all sorts of algorithms in place to help the Message reach that delivery quicker, but they're not really the important bit. The important bit is that messages aren't sent *to* Nodes, they're sent *towards* their MessageID.
 
 Here's an example of routing a Message with a randomly generated ID (based on the `crypto/rand` package) through a Cluster:
 
@@ -158,24 +154,9 @@ if err != nil {
 }
 ```
 
-You'll notice we set `purpose` in there to `byte(16)`. Purpose is a way of distinguishing between different types of Messages, and is useful when handling them. We only guarantee that bytes with values 16 and above will go unused by Wendy's own messages. To avoid collisions, you should only use bytes with values of 16 and above when defining your messages.
+You'll notice we set `purpose` in there to `byte(16)`. Purpose is a way of distinguishing between different types of Messages, and is useful when handling them. We only guarantee that bytes with values 16 and above will go unused by FlowDHT's own messages. To avoid collisions, you should only use bytes with values of 16 and above when defining your messages.
 
 We repeated that because it's kind of important.
-
-## Contributing
-
-We'd love to see Wendy improve. There's a lot that can still be done with it, and we'd love some help figuring out how to automate some more complete tests for it.
-
-To contribute to Wendy:
-
-* **Fork** the repository
-* **Modify** your fork
-* Ensure your fork **passes all tests**
-* **Send** a pull request
-	* Bonus points if the pull request includes *what* you changed, *why* you changed it, and *has unit tests* attached.
-	* For the love of all that is holy, please use `go fmt` *before* you send the pull request.
-
-We'll review it and merge it in if it's appropriate.
 
 ## Implementation Details
 

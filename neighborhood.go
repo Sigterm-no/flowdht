@@ -1,4 +1,4 @@
-package wendy
+package flowdht
 
 import (
 	"errors"
@@ -19,7 +19,7 @@ func newNeighborhoodSet(self *Node) *neighborhoodSet {
 	return &neighborhoodSet{
 		self:     self,
 		nodes:    [32]*Node{},
-		log:      log.New(os.Stdout, "wendy#neighborhoodSet("+self.ID.String()+")", log.LstdFlags),
+		log:      log.New(os.Stdout, "flowdht#neighborhoodSet("+self.ID.String()+")", log.LstdFlags),
 		logLevel: LogLevelWarn,
 		lock:     new(sync.RWMutex),
 	}

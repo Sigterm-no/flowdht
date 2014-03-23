@@ -1,4 +1,4 @@
-package wendy
+package flowdht
 
 import (
 	"errors"
@@ -21,7 +21,7 @@ func newLeafSet(self *Node) *leafSet {
 		self:     self,
 		left:     [16]*Node{},
 		right:    [16]*Node{},
-		log:      log.New(os.Stdout, "wendy#leafSet("+self.ID.String()+")", log.LstdFlags),
+		log:      log.New(os.Stdout, "flowdht#leafSet("+self.ID.String()+")", log.LstdFlags),
 		logLevel: LogLevelWarn,
 		lock:     new(sync.RWMutex),
 	}

@@ -1,4 +1,4 @@
-package wendy
+package flowdht
 
 import (
 	"errors"
@@ -19,7 +19,7 @@ func newRoutingTable(self *Node) *routingTable {
 	return &routingTable{
 		self:     self,
 		nodes:    [32][16]*Node{},
-		log:      log.New(os.Stdout, "wendy#routingTable("+self.ID.String()+")", log.LstdFlags),
+		log:      log.New(os.Stdout, "flowdht#routingTable("+self.ID.String()+")", log.LstdFlags),
 		logLevel: LogLevelWarn,
 		lock:     new(sync.RWMutex),
 	}
